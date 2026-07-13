@@ -1,47 +1,42 @@
 # 🧠 People Flow Detection using YOLOv8m, ByteTrack & Heatmap Visualization
 
-## 📌 Project Overview
-
-This project implements a real-time **People Flow Detection System** using **YOLOv8m** for person detection and **ByteTrack** for multi-object tracking. The system counts the number of people entering and exiting a predefined area based on their movement across two horizontal lines and generates a heatmap to visualize areas with the highest human activity.
+> A real-time computer vision system for **people detection, multi-object tracking, entry/exit counting, and heatmap visualization** using **YOLOv8m** and **ByteTrack**.
 
 ---
 
-## 🎯 Objectives
+## 📌 Project Summary
 
-* Detect people in every video frame using a pre-trained YOLOv8m model.
-* Track each person with a unique ID using ByteTrack.
-* Count:
+This project presents a robust **People Flow Detection System** that leverages **YOLOv8m** for accurate person detection and **ByteTrack** for reliable multi-object tracking. The system monitors pedestrian movement, counts people entering and exiting a defined area based on line-crossing events, and generates a heatmap illustrating areas with the highest human activity.
 
-  * **IN** – A person moving from top to bottom crossing the upper line.
-  * **OUT** – A person moving from bottom to top crossing the lower line.
-* Generate a movement heatmap based on the center points of detected people.
-* Produce an annotated output video with live counters and tracking IDs.
+The solution is designed for real-world applications such as **smart surveillance**, **crowd analytics**, **retail customer monitoring**, **building occupancy analysis**, and **public safety systems**.
 
 ---
 
-## 🚀 Features
+## 🎯 Key Features
 
-* ✅ YOLOv8m Person Detection
-* ✅ ByteTrack Multi-Object Tracking
-* ✅ Unique Tracking IDs
-* ✅ Real-Time IN/OUT Counting
-* ✅ Two Horizontal Counting Lines
-* ✅ Live Bounding Boxes and Labels
-* ✅ Heatmap Generation
-* ✅ Annotated Output Video
-* ✅ Heatmap Overlay Image
+* Real-time person detection using **YOLOv8m**
+* Multi-object tracking with **ByteTrack**
+* Persistent unique IDs for tracked individuals
+* Entry (IN) and Exit (OUT) counting using line-crossing logic
+* Motion heatmap generation
+* Live visualization with bounding boxes and tracking IDs
+* Annotated output video generation
+* Heatmap overlay visualization
+* Modular and easy-to-understand implementation
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠️ Tech Stack
 
-* Python 3
-* YOLOv8m (Ultralytics)
-* ByteTrack
-* OpenCV
-* NumPy
-* Supervision Library
-* Google Colab
+| Category                | Technologies                    |
+| ----------------------- | ------------------------------- |
+| Programming Language    | Python                          |
+| Object Detection        | YOLOv8m (Ultralytics)           |
+| Multi-Object Tracking   | ByteTrack                       |
+| Computer Vision         | OpenCV                          |
+| Numerical Computing     | NumPy                           |
+| Visualization           | Supervision                     |
+| Development Environment | Google Colab / Jupyter Notebook |
 
 ---
 
@@ -54,15 +49,27 @@ People-Flow-Detection/
 ├── output.mp4
 ├── heatmap.png
 ├── heatmap_overlay.png
+├── requirements.txt
 ├── README.md
-└── requirements.txt
+└── assets/
+    ├── input_video.mp4
+    ├── output_preview.gif
+    └── screenshots/
 ```
 
 ---
 
-## 📥 Installation
+## ⚙️ Installation
 
-Install the required dependencies:
+Clone the repository:
+
+```bash
+git clone https://github.com/Ferdaus71/People-Flow-Detection.git
+
+cd People-Flow-Detection
+```
+
+Install dependencies:
 
 ```bash
 pip install ultralytics supervision opencv-python numpy
@@ -70,127 +77,22 @@ pip install ultralytics supervision opencv-python numpy
 
 ---
 
-## ▶️ Running the Project
+## ▶️ How to Run
 
-1. Open the notebook in Google Colab.
+1. Open the notebook in **Google Colab** or Jupyter Notebook.
 2. Upload the input video.
-3. Load the YOLOv8m model.
-4. Set the counting line coordinates.
-5. Run all cells.
-6. Download the generated outputs.
+3. Load the pretrained **YOLOv8m** model.
+4. Set the line coordinates.
+5. Run all notebook cells.
+6. Download the generated output files.
 
 ---
 
-## 🧠 Detection Method
+## 🧠 Detection Pipeline
 
-This project uses **YOLOv8m**, a pre-trained object detection model from Ultralytics.
+The detection workflow consists of the following stages:
 
-Detection pipeline:
-
-1. Read each frame from the input video.
-2. Detect all objects using YOLOv8m.
-3. Filter detections to keep only the **Person** class (Class ID = 0).
-4. Pass detections to ByteTrack for assigning persistent tracking IDs.
-
----
-
-## 🔄 Tracking Method
-
-The project uses **ByteTrack** for multi-object tracking.
-
-Each detected person receives a unique tracking ID that remains consistent across consecutive frames.
-
-The tracking ID is used to:
-
-* Follow each person's movement.
-* Prevent duplicate counting.
-* Estimate movement direction.
-
----
-
-## 📍 Counting Line Coordinates
-
-Two horizontal lines are defined in the video.
-
-Example:
-
-```text
-Upper Line (IN Line):  Y = 220
-Lower Line (OUT Line): Y = 340
 ```
-
-These coordinates can be adjusted according to the input video using Polygon Zone.
-
----
-
-## 📊 IN / OUT Counting Logic
-
-The system stores the previous Y-coordinate of every tracked person.
-
-### IN Counting
-
-A person is counted as **IN** if:
-
-1. The previous center point is above the upper line.
-2. The current center point crosses below the upper line.
-3. The person has not already been counted as IN.
-
-Mathematically:
-
-```text
-previous_y < LINE_UP
-current_y >= LINE_UP
-```
-
----
-
-### OUT Counting
-
-A person is counted as **OUT** if:
-
-1. The previous center point is below the lower line.
-2. The current center point crosses above the lower line.
-3. The person has not already been counted as OUT.
-
-Mathematically:
-
-```text
-previous_y > LINE_DOWN
-current_y <= LINE_DOWN
-```
-
----
-
-## 🔥 Heatmap Generation
-
-The heatmap is generated by accumulating the center point of every detected person across all video frames.
-
-Steps:
-
-1. Calculate the center of each bounding box.
-2. Increment the corresponding pixel value in the heatmap matrix.
-3. Normalize the accumulated values.
-4. Apply the **JET** color map.
-5. Save the final heatmap image.
-6. Create an overlay image by blending the heatmap with the original frame.
-
-The heatmap highlights regions with the highest human presence.
-
----
-
-## 📤 Output Files
-
-| File                | Description                                                                                 |
-| ------------------- | ------------------------------------------------------------------------------------------- |
-| output.mp4          | Annotated video with tracking IDs, bounding boxes, counting lines, and live IN/OUT counters |
-| heatmap.png         | Motion intensity heatmap                                                                    |
-| heatmap_overlay.png | Heatmap blended with the original frame                                                     |
-
----
-
-## 📈 Workflow
-
-```text
 Input Video
       │
       ▼
@@ -200,37 +102,176 @@ YOLOv8m Person Detection
 ByteTrack Object Tracking
       │
       ▼
-Calculate Bounding Box Centers
+Trajectory Analysis
       │
       ▼
-Check Line Crossing
+Line Crossing Detection
       │
       ▼
-Update IN / OUT Counters
+IN / OUT Counting
       │
       ▼
-Generate Heatmap
+Heatmap Generation
       │
       ▼
-Save Output Video & Heatmap
+Annotated Output Video
 ```
 
 ---
 
-## 📸 Expected Output
+## 🎯 Detection Method
 
-The final output video includes:
+The project utilizes **YOLOv8m**, a state-of-the-art object detection model from Ultralytics.
 
-* Person bounding boxes
-* Tracking IDs
-* Upper and lower counting lines
-* Live IN counter
-* Live OUT counter
+Detection process:
 
-Additionally, the project generates:
+* Read each video frame
+* Detect all objects
+* Filter only the **Person** class (COCO Class ID = 0)
+* Pass detections to ByteTrack
+* Assign persistent tracking IDs
 
-* Heatmap image
-* Heatmap overlay image
+---
+
+## 🚶 Multi-Object Tracking
+
+ByteTrack maintains a consistent identity for every detected person throughout the video.
+
+Each tracked individual receives:
+
+* Unique Tracking ID
+* Bounding Box
+* Center Point
+* Movement History
+
+Tracking enables reliable movement analysis while minimizing duplicate counts.
+
+---
+
+## 📍 Counting Line Configuration
+
+Two horizontal counting lines are defined.
+
+Example:
+
+```python
+LINE_UP = 220
+LINE_DOWN = 340
+```
+
+These coordinates can be adjusted based on the camera angle using **Polygon Zone**.
+
+---
+
+## 🔄 IN / OUT Counting Logic
+
+### IN Counter
+
+A person is counted as **IN** when:
+
+* Previous center point is above the upper line.
+* Current center point crosses below the upper line.
+* The person has not been counted previously.
+
+```
+previous_y < LINE_UP
+current_y >= LINE_UP
+```
+
+---
+
+### OUT Counter
+
+A person is counted as **OUT** when:
+
+* Previous center point is below the lower line.
+* Current center point crosses above the lower line.
+* The person has not been counted previously.
+
+```
+previous_y > LINE_DOWN
+current_y <= LINE_DOWN
+```
+
+Duplicate counting is prevented using dedicated tracking sets.
+
+---
+
+## 🔥 Heatmap Generation
+
+A motion heatmap is generated by accumulating the center point of every tracked person across all frames.
+
+Process:
+
+1. Compute bounding box centers.
+2. Accumulate pixel intensity.
+3. Normalize accumulated values.
+4. Apply OpenCV JET color map.
+5. Generate standalone heatmap.
+6. Blend heatmap with the original frame.
+
+The resulting visualization highlights areas with the highest pedestrian activity.
+
+---
+
+## 📊 Output
+
+The project generates:
+
+| Output                  | Description                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------------ |
+| **output.mp4**          | Annotated video with tracking IDs, bounding boxes, counting lines, and live counters |
+| **heatmap.png**         | Motion intensity heatmap                                                             |
+| **heatmap_overlay.png** | Heatmap blended with the original frame                                              |
+
+---
+
+## 💼 Applications
+
+* Smart City Surveillance
+* Retail Customer Analytics
+* Shopping Mall Monitoring
+* Airport Passenger Flow Analysis
+* Public Transport Monitoring
+* Crowd Density Analysis
+* Building Occupancy Monitoring
+* Security & Access Control
+
+---
+
+## 🚀 Future Improvements
+
+* DeepSORT integration
+* Polygon-based counting zones
+* Multi-camera tracking
+* Person re-identification (ReID)
+* Real-time webcam inference
+* Dashboard with analytics
+* Database logging
+* Streamlit web application
+* Edge deployment on NVIDIA Jetson
+
+---
+
+## 📚 Skills Demonstrated
+
+* Computer Vision
+* Deep Learning
+* Object Detection
+* Multi-Object Tracking
+* YOLOv8
+* ByteTrack
+* OpenCV
+* Motion Analytics
+* Heatmap Visualization
+* Python Development
+* Video Processing
+
+---
+
+## 📄 License
+
+This project is developed for educational and research purposes.
 
 ---
 
@@ -238,8 +279,16 @@ Additionally, the project generates:
 
 **Ferdaus Hossen**
 
-* AI/ML Engineer
-* Machine Learning & Computer Vision Enthusiast
-* Green University of Bangladesh
+**AI/ML Engineer | Computer Vision | Deep Learning | Large Language Models**
 
-GitHub: https://github.com/Ferdaus71
+* 🎓 B.Sc. in Computer Science & Engineering
+* 🔬 AI & Machine Learning Researcher
+* 💻 Passionate about Computer Vision, NLP, LLMs, and Intelligent Systems
+
+**GitHub:** https://github.com/Ferdaus71
+
+**LinkedIn:** https://linkedin.com/in/ferdaus71
+
+---
+
+⭐ If you found this project helpful, consider giving it a **Star** on GitHub.
