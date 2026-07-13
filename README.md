@@ -51,10 +51,6 @@ People-Flow-Detection/
 ├── heatmap_overlay.png
 ├── requirements.txt
 ├── README.md
-└── assets/
-    ├── input_video.mp4
-    ├── output_preview.gif
-    └── screenshots/
 ```
 
 ---
